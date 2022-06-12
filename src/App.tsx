@@ -12,39 +12,82 @@ import { minHeight } from '@mui/system';
 import { alignProperty } from '@mui/material/styles/cssUtils';
 import { red } from '@mui/material/colors';
 
+import axios from 'axios';
+import { type } from 'os';
+
 
 function App() {
+
+  const [score, setScore] = React.useState({
+    venue: 'NA',
+    status: 'NA',
+  })
+
+  let fetchScore = () => {
+
+    let cur_score = {
+      venue: 'NA',
+      status: 'NA',
+    }
+
+    const API_ENDPT = 'https://api.cricapi.com/v1/currentMatches?apikey=27bc8116-3ed7-4902-82d4-29ada2df17c1'
+    axios.get(API_ENDPT).then((response) => {
+  
+      for (var match in response.data.data) {
+        const  obj = response.data.data[match]
+  
+        if (obj['name'].includes('India')) {
+          console.log(obj['venue'], obj['status'])
+          cur_score.venue = obj['venue']
+          cur_score.status = obj['status']
+        }
+      }
+    })
+    
+    setScore(cur_score)
+  }
+
+  //fetchScore()
+
   return (
     <div className="App">
-      <ScoreCard></ScoreCard>
+      <ScoreCard
+       score={score}
+      >
+      </ScoreCard>
     </div>
   );
 }
 
 
-function ScoreCard() {
+
+
+
+const ScoreCard = ({score}: any,
+) => {
+
 
   const card_style = {
     bgcolor: 'red',
-    padding: 2,
+    // padding: 2,
     width: 200,
     height: 200,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
 
   }
   
   const header_style = {
     bgcolor: 'green',
     display: 'flex',
-    margin: 2,
+    // margin: 2,
   }
   
   const status_style = {
     bgcolor: 'blue',
     display: 'flex',
-    margin: 2,
+    // margin: 2,
   }
 
   const score_style = {
@@ -58,7 +101,7 @@ function ScoreCard() {
       sx={card_style}>
       <CardContent>
         <Typography sx={header_style}>
-          LIVE:2nd Test:Bangalore
+          {score.venue}
         </Typography>
         <Typography sx={score_style}>
           <Typography>Team1</Typography>
@@ -69,7 +112,7 @@ function ScoreCard() {
           <Typography>Score2</Typography>
         </Typography>
         <Typography sx={status_style}>
-          Status
+          {score.status}
         </Typography>
       </CardContent>
     </Card>
