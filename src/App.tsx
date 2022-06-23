@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -13,22 +13,59 @@ import { alignProperty } from '@mui/material/styles/cssUtils';
 import { red } from '@mui/material/colors';
 
 import axios from 'axios';
-import { type } from 'os';
+
+interface Score  {
+  team: string,
+  runs: string,
+  overs: string,
+  wickets: string,
+}
+
+interface Game {
+  status: string,
+  venue: string,
+  score1: Score,
+  score2: Score,
+}
+
+
+class Score {
+
+  team: string
+  runs: string
+  overs: string
+  wickets: string
+
+  constructor() {
+    this.team = ''
+    this.runs = '0'
+    this.overs = '0'
+    this.wickets = '0'
+  }
+}
+
+class Game {
+  status: string
+  venue: string
+  score1: Score
+  score2: Score
+
+  constructor() {
+    this.status = ''
+    this.venue = ''
+    this.score1 = new Score
+    this.score2 = new Score
+  }
+}
 
 
 function App() {
 
-  const [score, setScore] = React.useState({
-    venue: 'NA',
-    status: 'NA',
-  })
+  const [game, setGame] = React.useState(new Game)
 
-  let fetchScore = () => {
+  const fetchScore = () => {
 
-    let cur_score = {
-      venue: 'NA',
-      status: 'NA',
-    }
+    let cur_game = new Game
 
     const API_ENDPT = 'https://api.cricapi.com/v1/currentMatches?apikey=27bc8116-3ed7-4902-82d4-29ada2df17c1'
     axios.get(API_ENDPT).then((response) => {
@@ -37,35 +74,62 @@ function App() {
         const  obj = response.data.data[match]
   
         if (obj['name'].includes('India')) {
-          console.log(obj['venue'], obj['status'])
-          cur_score.venue = obj['venue']
-          cur_score.status = obj['status']
+          console.log(obj)
+          cur_game.venue = obj['venue']
+          cur_game.status = obj['status']
+
+          let team1 = obj['teamInfo'][0]
+          cur_game.score1.team = team1['shortname']
+
+          let team2 = obj['teamInfo'][1]
+          cur_game.score2.team = team2['shortname']
+
+          if (obj['score'].length > 0) {
+  
+            let score1 = obj['score'][0]
+            cur_game.score1.runs = score1['r'].toLocaleString()
+            cur_game.score1.overs = score1['o'].toLocaleString()
+            cur_game.score1.wickets = score1['w'].toLocaleString()
+
+          }
+
+          if (obj['score'].length > 1) {
+
+            let score2 = obj['score'][1]
+            cur_game.score2.runs = score2['r'].toLocaleString()
+            cur_game.score2.overs = score2['o'].toLocaleString()
+            cur_game.score2.wickets = score2['w'].toLocaleString()
+
+          }
+          console.log(cur_game)
+          break
         }
       }
+      setGame(cur_game)
     })
-    
-    setScore(cur_score)
   }
 
-  //fetchScore()
+  useEffect(() => {
+    fetchScore()
+  }, [])
 
   return (
     <div className="App">
       <ScoreCard
-       score={score}
-      >
-      </ScoreCard>
+       game={game}
+      />
     </div>
   );
 }
 
+interface Props {
+  game: Game,
+}
 
-
-
-
-const ScoreCard = ({score}: any,
+const ScoreCard = (props: Props
 ) => {
 
+  const {game} = props
 
   const card_style = {
     bgcolor: 'red',
@@ -75,7 +139,6 @@ const ScoreCard = ({score}: any,
     display: 'flex',
     flexDirection: 'column',
     // justifyContent: 'space-between',
-
   }
   
   const header_style = {
@@ -101,18 +164,18 @@ const ScoreCard = ({score}: any,
       sx={card_style}>
       <CardContent>
         <Typography sx={header_style}>
-          {score.venue}
+          {game.venue}
         </Typography>
         <Typography sx={score_style}>
-          <Typography>Team1</Typography>
-          <Typography>Score1</Typography>
+          <Typography>{game.score1.team}</Typography>
+          <Typography>{game.score1.runs}/{game.score1.wickets}({game.score1.overs})</Typography>
         </Typography>
         <Typography sx={score_style}>
-          <Typography>Team2</Typography>
-          <Typography>Score2</Typography>
+          <Typography>{game.score2.team}</Typography>
+          <Typography>{game.score2.runs}/{game.score2.wickets}({game.score2.overs})</Typography>
         </Typography>
         <Typography sx={status_style}>
-          {score.status}
+          {game.status}
         </Typography>
       </CardContent>
     </Card>
