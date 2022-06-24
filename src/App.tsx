@@ -32,12 +32,14 @@ interface Game {
 class Score {
 
   team: string
+  flag: string
   runs: string
   overs: string
   wickets: string
 
   constructor() {
     this.team = ''
+    this.flag = ''
     this.runs = '0'
     this.overs = '0'
     this.wickets = '0'
@@ -79,29 +81,28 @@ function App() {
           cur_game.status = obj['status']
 
           let team1 = obj['teamInfo'][0]
+          console.log(team1)
           cur_game.score1.team = team1['shortname']
+          cur_game.score1.flag = team1['img']
 
           let team2 = obj['teamInfo'][1]
           cur_game.score2.team = team2['shortname']
+          cur_game.score2.flag = team2['img']
 
-          if (obj['score'].length > 0) {
-  
-            let score1 = obj['score'][0]
-            cur_game.score1.runs = score1['r'].toLocaleString()
-            cur_game.score1.overs = score1['o'].toLocaleString()
-            cur_game.score1.wickets = score1['w'].toLocaleString()
+          const team1Index = obj['score'].length > 2 ? 2 : 0
 
-          }
+          let score1 = obj['score'][team1Index]
+          cur_game.score1.runs = score1['r'].toLocaleString()
+          cur_game.score1.overs = score1['o'].toLocaleString()
+          cur_game.score1.wickets = score1['w'].toLocaleString()
 
-          if (obj['score'].length > 1) {
+          const team2Index = obj['score'].length > 3 ? 3 : 1
 
-            let score2 = obj['score'][1]
-            cur_game.score2.runs = score2['r'].toLocaleString()
-            cur_game.score2.overs = score2['o'].toLocaleString()
-            cur_game.score2.wickets = score2['w'].toLocaleString()
+          let score2 = obj['score'][team2Index]
+          cur_game.score2.runs = score2['r'].toLocaleString()
+          cur_game.score2.overs = score2['o'].toLocaleString()
+          cur_game.score2.wickets = score2['w'].toLocaleString()
 
-          }
-          console.log(cur_game)
           break
         }
       }
@@ -132,31 +133,32 @@ const ScoreCard = (props: Props
   const {game} = props
 
   const card_style = {
-    bgcolor: 'red',
-    // padding: 2,
+    bgcolor: 'white',
     width: 200,
     height: 200,
     display: 'flex',
     flexDirection: 'column',
-    // justifyContent: 'space-between',
+    marginLeft: 20,
+    marginTop: 10,
+    border: 2,
   }
   
   const header_style = {
-    bgcolor: 'green',
+    bgcolor: 'white',
     display: 'flex',
-    // margin: 2,
   }
   
   const status_style = {
-    bgcolor: 'blue',
+    bgcolor: 'white',
     display: 'flex',
-    // margin: 2,
+    marginTop: 2,
   }
 
   const score_style = {
     display: 'flex',
     justifyContent: 'space-between',
-    margin: 2,
+    marginLeft: 0,
+    marginTop: 2,
   }
 
   return(
@@ -167,11 +169,11 @@ const ScoreCard = (props: Props
           {game.venue}
         </Typography>
         <Typography sx={score_style}>
-          <Typography>{game.score1.team}</Typography>
+          <Typography> <img width={20} height={20} src={game.score1.flag}></img>{game.score1.team}</Typography>
           <Typography>{game.score1.runs}/{game.score1.wickets}({game.score1.overs})</Typography>
         </Typography>
         <Typography sx={score_style}>
-          <Typography>{game.score2.team}</Typography>
+          <Typography><img  width={20} height={20} src={game.score2.flag}></img>{game.score2.team}</Typography>
           <Typography>{game.score2.runs}/{game.score2.wickets}({game.score2.overs})</Typography>
         </Typography>
         <Typography sx={status_style}>
