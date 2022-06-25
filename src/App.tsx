@@ -76,12 +76,10 @@ function App() {
         const  obj = response.data.data[match]
   
         if (obj['name'].includes('India')) {
-          console.log(obj)
           cur_game.venue = obj['venue']
           cur_game.status = obj['status']
 
           let team1 = obj['teamInfo'][0]
-          console.log(team1)
           cur_game.score1.team = team1['shortname']
           cur_game.score1.flag = team1['img']
 
