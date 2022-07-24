@@ -24,13 +24,21 @@ function App() {
     })
   }
 
-  const handleSnP = () => {
+  // const handleSnP = () => {
+  //   const options = {
+  //     method: "GET",
+  //     url: 'https://financialmodelingprep.com/api/v3/quote/%5EGSPC?apikey=3a062116ba88c0674c0a4edc028fddf2',
+  //   };
+  //   axios.request(options).then(function (response) {
+  //     console.log(response.data);
+  //   }).catch(function (error) {
+  //     console.error(error);
+  //   });
+  // }
 
-    // 3a062116ba88c0674c0a4edc028fddf2
-  }
+  let cur_stock = new Stock();
 
-  const handleIndex = () => {
-    let stock = new Stock();
+  const handleNifty50 = () => {
     const options = {
       method: "GET",
       url: 'https://latest-stock-price.p.rapidapi.com/price',
@@ -45,36 +53,47 @@ function App() {
       for (var index in response.data) {
         let item = response.data[index];
         if(item.symbol == 'NIFTY 50') {
-          stock.nifty50 = item.lastPrice;
-          console.log(item.lastPrice);
+          cur_stock.nifty50 = item.lastPrice;
           break;
         }
       }
-      setStock(stock);
+      setStock(cur_stock);
     }).catch(function (error) {
       console.error(error);
     });
-  
-    // const API_ENDPT = 'https://www1.nseindia.com/live_market/dynaContent/live_watch/stock_watch/liveIndexWatchData.json'
-    // const params = {
-    //   Indices: 'NIFTY 50',
-    // }
-    // const headers = {
-    //   'x-rapidapi-host': 'latest-stock-price.p.rapidapi.com',
-    //   'x-rapidapi-key': 'ebc213ac00mshcdbcf4e4c60518bp195c0cjsn751c7380510c'
-    // }
-    // axios.get(API_ENDPT,
-    //   {headers: {"Access-Control-Allow-Origin": "*",
-    //      "origin" : window.location.protocol + '//' + window.location.host}}
-    //   ).then((response) => {
-    //     console.log("Hey")
-    //    console.log(response)
-    // })
+  }
+
+  const handleNiftyNext50 = () => {
+    
+    const options = {
+      method: "GET",
+      url: 'https://latest-stock-price.p.rapidapi.com/price',
+      params: {Indices: 'NIFTY NEXT 50'},
+      headers: {
+        "X-RapidAPI-Key": "ebc213ac00mshcdbcf4e4c60518bp195c0cjsn751c7380510c",
+        "X-RapidAPI-Host": "latest-stock-price.p.rapidapi.com",
+      },
+    };
+    axios.request(options).then(function (response) {
+      console.log(response.data);
+      for (var index in response.data) {
+        let item = response.data[index];
+        if(item.symbol == 'NIFTY NEXT 50') {
+          cur_stock.niftyNext50 = item.lastPrice;
+          break;
+        }
+      }
+      setStock(cur_stock);
+    }).catch(function (error) {
+      console.error(error);
+    });
   }
 
   useEffect(() => {
-    //handleScore()
-    handleIndex()
+    handleScore()
+    handleNifty50()
+    handleNiftyNext50()
+    // handleSnP()
   }, [])
 
 

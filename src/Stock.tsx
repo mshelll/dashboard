@@ -6,10 +6,12 @@ import Typography from '@mui/material/Typography';
 
 export class Stock {
     nifty50: string
+    niftyNext50: string
     sensex: string
 
     constructor() {
         this.nifty50 = ''
+        this.niftyNext50 = ''
         this.sensex = ''
     }
 }
@@ -46,8 +48,8 @@ export const IndexCard = (props: Props)  => {
                     <Typography>{stock.nifty50}</Typography>
                  </Typography>
                  <Typography display='flex' justifyContent='space-between' marginBottom={3}>
-                    <Typography>SENSEX</Typography>
-                    <Typography>200</Typography>
+                    <Typography>NEXT50</Typography>
+                    <Typography>{stock.niftyNext50}</Typography>
                  </Typography>
                  <Typography display='flex' justifyContent='space-between'>
                     <Typography>S&P</Typography>
