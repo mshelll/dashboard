@@ -36,9 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-
-.container {
-  min-height: 95vh;
-  min-width: 95vh;
-}

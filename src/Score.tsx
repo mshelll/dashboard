@@ -91,22 +91,17 @@ export const ScoreCard = (props: Props
     const {game} = props
   
     const card_style = {
-      bgcolor: 'white',
-      width: 200,
-      height: 220,
       display: 'flex',
+      minWidth: 200,
+      minHeight: 200,
       flexDirection: 'column',
       border: 2,
     }
     
     const header_style = {
-      bgcolor: 'white',
-      display: 'flex',
     }
     
     const status_style = {
-      bgcolor: 'white',
-      display: 'flex',
       marginTop: 2,
     }
   
