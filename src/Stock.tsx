@@ -51,10 +51,6 @@ export const IndexCard = (props: Props)  => {
                     <Typography>NEXT50</Typography>
                     <Typography>{stock.niftyNext50}</Typography>
                  </Typography>
-                 <Typography display='flex' justifyContent='space-between'>
-                    <Typography>S&P</Typography>
-                    <Typography>200</Typography>
-                 </Typography>
             </CardContent>
         </Card>
     )

@@ -8,35 +8,41 @@ import axios from 'axios';
 import {ScoreCard, fetchScore, Game,} from './Score'
 import { IndexCard, Stock,  } from './Stock';
 
+const useSemiPersistentState = (key: string, defaultValue: Stock) => {
+
+  console.log(JSON.stringify(defaultValue))
+
+
+  const [value, setValue] = React.useState(
+    JSON.parse(localStorage.getItem(key) || JSON.stringify(defaultValue))
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+
+  return [value, setValue];
+};
+
 function App() {
 
 
   const [game, setGame] = React.useState(new Game)
 
-  const [stock, setStock] = React.useState(new Stock)
+  // const [nifty50, setNifty50] = React.useState("")
+  // const [next50, setNext50] = React.useState("")
+
+  const [cur_stock, setStock] = useSemiPersistentState('stock', new Stock())
 
   const handleScore = () => {
 
     const API_ENDPT = 'https://api.cricapi.com/v1/currentMatches?apikey=27bc8116-3ed7-4902-82d4-29ada2df17c1'
     axios.get(API_ENDPT).then((response) => {
+      //console.log(response)
       const cur_game = fetchScore(response)
       setGame(cur_game)
     })
   }
-
-  // const handleSnP = () => {
-  //   const options = {
-  //     method: "GET",
-  //     url: 'https://financialmodelingprep.com/api/v3/quote/%5EGSPC?apikey=3a062116ba88c0674c0a4edc028fddf2',
-  //   };
-  //   axios.request(options).then(function (response) {
-  //     console.log(response.data);
-  //   }).catch(function (error) {
-  //     console.error(error);
-  //   });
-  // }
-
-  let cur_stock = new Stock();
 
   const handleNifty50 = () => {
     const options = {
@@ -49,14 +55,17 @@ function App() {
       },
     };
     axios.request(options).then(function (response) {
-      console.log(response.data);
+      //console.log(response.data);
       for (var index in response.data) {
         let item = response.data[index];
-        if(item.symbol == 'NIFTY 50') {
+        if(item.symbol == "NIFTY 50") {
+          //console.log("Found nifty 50")
           cur_stock.nifty50 = item.lastPrice;
           break;
         }
       }
+
+      //console.log("NIFTY 50", cur_stock)
       setStock(cur_stock);
     }).catch(function (error) {
       console.error(error);
@@ -75,14 +84,16 @@ function App() {
       },
     };
     axios.request(options).then(function (response) {
-      console.log(response.data);
+      //console.log(response.data);
       for (var index in response.data) {
         let item = response.data[index];
-        if(item.symbol == 'NIFTY NEXT 50') {
+        if(item.symbol == "NIFTY NEXT 50") {
+          //console.log("Found next 50")
           cur_stock.niftyNext50 = item.lastPrice;
           break;
         }
       }
+      //console.log("NEXT 50", cur_stock)
       setStock(cur_stock);
     }).catch(function (error) {
       console.error(error);
@@ -116,7 +127,7 @@ function App() {
        game={game}
       />
       <IndexCard
-      stock={stock}
+        stock={cur_stock}
       />
       </Grid>
     </div>
