@@ -67,8 +67,8 @@ export const fetchScore = (response: any): Game => {
 
           const team2Index = obj['score'].length > 3 ? 3 : 1
 
-          let score2 = obj['score'][team2Index] || -1
-          if (score2 > 0) {
+          let score2 = obj['score'][team2Index] || null
+          if (score2) {
             cur_game.score2.runs = score2['r'].toLocaleString()
             cur_game.score2.overs = score2['o'].toLocaleString()
             cur_game.score2.wickets = score2['w'].toLocaleString()
