@@ -54,3 +54,9 @@ Styling and Position the Card
 
 # Dashboard
 https://dashboard-2ac58.web.app/
+
+# Deploy
+```
+npm run build
+firebase deploy
+```
