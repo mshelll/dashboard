@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 
 import axios from 'axios';
 
-import {ScoreCard, fetchScore, Game,} from './Score'
+import {ScoreCards, fetchScore, Game,} from './Score'
 import { IndexCard, Stock,  } from './Stock';
 
 const useSemiPersistentState = (key: string, defaultValue: Stock) => {
@@ -27,7 +27,7 @@ const useSemiPersistentState = (key: string, defaultValue: Stock) => {
 function App() {
 
 
-  const [game, setGame] = React.useState(new Game)
+  const [games, setGames] = React.useState(new Array<Game>)
 
   // const [nifty50, setNifty50] = React.useState("")
   // const [next50, setNext50] = React.useState("")
@@ -38,9 +38,9 @@ function App() {
 
     const API_ENDPT = 'https://api.cricapi.com/v1/currentMatches?apikey=27bc8116-3ed7-4902-82d4-29ada2df17c1'
     axios.get(API_ENDPT).then((response) => {
-      //console.log(response)
-      const cur_game = fetchScore(response)
-      setGame(cur_game)
+      console.log(response)
+      const cur_games = fetchScore(response)
+      setGames(cur_games)
     })
   }
 
@@ -55,7 +55,7 @@ function App() {
       },
     };
     axios.request(options).then(function (response) {
-      //console.log(response.data);
+      console.log(response.data);
       for (var index in response.data) {
         let item = response.data[index];
         if(item.symbol == "NIFTY 50") {
@@ -84,7 +84,7 @@ function App() {
       },
     };
     axios.request(options).then(function (response) {
-      //console.log(response.data);
+      console.log(response.data);
       for (var index in response.data) {
         let item = response.data[index];
         if(item.symbol == "NIFTY NEXT 50") {
@@ -123,8 +123,8 @@ function App() {
        sx={grid_style}
        className="container"
       >
-      <ScoreCard
-       game={game}
+      <ScoreCards
+       games={games}
       />
       <IndexCard
         stock={cur_stock}

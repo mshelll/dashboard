@@ -36,34 +36,42 @@ export class Game {
   }
 }
 
-export const fetchScore = (response: any): Game => {
+export const fetchScore = (response: any): Game[] => {
 
-      const cur_game = new Game
-
-      console.log(cur_game.score2)
+      const cur_games = new Array<Game>()
+      const teams = new Array<string>()
   
       for (var match in response.data.data) {
         const  obj = response.data.data[match]
+        const cur_game = new Game
   
         if (obj['name'].includes('India')) {
           console.log(obj)
+          let team1 = obj['teamInfo'][0]
+          let team2 = obj['teamInfo'][1]
+
+          if (teams.includes(team1['shortname']) || teams.includes(team2['shortname'])) {
+            continue
+          }
+
           cur_game.venue = obj['venue']
           cur_game.status = obj['status']
 
-          let team1 = obj['teamInfo'][0]
           cur_game.score1.team = team1['shortname']
           cur_game.score1.flag = team1['img']
 
-          let team2 = obj['teamInfo'][1]
           cur_game.score2.team = team2['shortname']
           cur_game.score2.flag = team2['img']
 
           const team1Index = obj['score'].length > 2 ? 2 : 0
 
-          let score1 = obj['score'][team1Index]
-          cur_game.score1.runs = score1['r'].toLocaleString()
-          cur_game.score1.overs = score1['o'].toLocaleString()
-          cur_game.score1.wickets = score1['w'].toLocaleString()
+          let score1 = obj['score'][team1Index] || null
+
+          if (score1) {
+            cur_game.score1.runs = score1['r'].toLocaleString()
+            cur_game.score1.overs = score1['o'].toLocaleString()
+            cur_game.score1.wickets = score1['w'].toLocaleString()
+          }
 
           const team2Index = obj['score'].length > 3 ? 3 : 1
 
@@ -73,26 +81,40 @@ export const fetchScore = (response: any): Game => {
             cur_game.score2.overs = score2['o'].toLocaleString()
             cur_game.score2.wickets = score2['w'].toLocaleString()
           }
-          return cur_game
+
+          teams.push(cur_game.score1.team)
+          teams.push(cur_game.score2.team)
+          cur_games.push(cur_game)
         }
       }
 
-    return cur_game
+    return cur_games
 }
 
 
 interface Props {
-    game: Game,
+    games: Array<Game>,
 }
-  
-export const ScoreCard = (props: Props
-  ) => {
+
+export const ScoreCards = (props: Props) => {
+
+  const {games} = props
+  return <>
+          {games.map(game => <ScoreCard game={game}/>)}
+         </>
+}
+
+interface Props1 {
+  game: Game,
+}
+
+export const ScoreCard = (props: Props1) => {
   
     const {game} = props
   
     const card_style = {
       display: 'flex',
-      minWidth: 200,
+      width: 200,
       minHeight: 200,
       flexDirection: 'column',
       border: 2,
