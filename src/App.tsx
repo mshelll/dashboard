@@ -38,7 +38,7 @@ function App() {
 
     const API_ENDPT = 'https://api.cricapi.com/v1/currentMatches?apikey=27bc8116-3ed7-4902-82d4-29ada2df17c1'
     axios.get(API_ENDPT).then((response) => {
-      console.log(response)
+      //console.log(response)
       const cur_games = fetchScore(response)
       setGames(cur_games)
     })
@@ -61,6 +61,7 @@ function App() {
         if(item.symbol == "NIFTY 50") {
           //console.log("Found nifty 50")
           cur_stock.nifty50 = item.lastPrice;
+          cur_stock.nifty50Color = +item.lastPrice > +item.Open ? "green" : "red"
           break;
         }
       }
@@ -90,6 +91,7 @@ function App() {
         if(item.symbol == "NIFTY NEXT 50") {
           //console.log("Found next 50")
           cur_stock.niftyNext50 = item.lastPrice;
+          cur_stock.niftyNext50Color = +item.lastPrice > +item.Open ? "green" : "red"
           break;
         }
       }
