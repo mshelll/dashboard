@@ -38,13 +38,14 @@ function App() {
 
     const API_ENDPT = 'https://api.cricapi.com/v1/currentMatches?apikey=27bc8116-3ed7-4902-82d4-29ada2df17c1'
     axios.get(API_ENDPT).then((response) => {
-      //console.log(response)
+      console.log(response)
       const cur_games = fetchScore(response)
       setGames(cur_games)
     })
   }
 
   const handleNifty50 = () => {
+    console.log("Inside handle NIFTy 50")
     const options = {
       method: "GET",
       url: 'https://latest-stock-price.p.rapidapi.com/price',
