@@ -21,9 +21,5 @@ jobs:
         uses: w9jds/firebase-action@v1.5.0
         with:
           args: deploy --only hosting
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DASHBOARD_2AC58 }}'
-          channelId: live
-          projectId: dashboard-2ac58
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
