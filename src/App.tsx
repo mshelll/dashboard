@@ -43,6 +43,7 @@ function App() {
       setGames(cur_games)
     })
   }
+  
 
   const handleNifty50 = () => {
     console.log("Inside handle NIFTy 50")
