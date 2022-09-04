@@ -3,21 +3,21 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {  faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
 export class Stock {
     nifty50: string
     nifty50Up: boolean
-    nifty50Color: string
     niftyNext50: string
-    niftyNext50Color: string
+    niftyNext50Up: boolean
     sensex: string
 
     constructor() {
         this.nifty50 = ''
         this.nifty50Up = true
-        this.nifty50Color = "green"
         this.niftyNext50 = ''
-        this.niftyNext50Color = "green"
+        this.niftyNext50Up = true
         this.sensex = ''
     }
 }
@@ -51,11 +51,17 @@ export const IndexCard = (props: Props)  => {
                  </Typography>
                  <Typography display='flex' justifyContent='space-between' marginBottom={3}>
                     <Typography>NIFTY50</Typography>
-                    <Typography sx={{color:stock.nifty50Color}}>{stock.nifty50}</Typography>
+                    <Typography sx={{color:stock.nifty50Up ? "green" : "red"}}>
+                        {stock.nifty50Up ? <FontAwesomeIcon icon={faAngleUp}/> : <FontAwesomeIcon icon={faAngleDown}/>}
+                        {stock.nifty50}
+                    </Typography>
                  </Typography>
                  <Typography display='flex' justifyContent='space-between' marginBottom={3}>
                     <Typography>NEXT50</Typography>
-                    <Typography sx={{color:stock.niftyNext50Color}}>{stock.niftyNext50}</Typography>
+                    <Typography sx={{color:stock.niftyNext50Up ? "green" : "red"}}>
+                        {stock.niftyNext50Up? <FontAwesomeIcon icon={faAngleUp}/> : <FontAwesomeIcon icon={faAngleDown}/>}
+                        {stock.niftyNext50}
+                    </Typography>
                  </Typography>
             </CardContent>
         </Card>
