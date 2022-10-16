@@ -6,6 +6,27 @@ import Typography from '@mui/material/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
+
+export const nifty50Req = {
+    method: "GET",
+    url: 'https://latest-stock-price.p.rapidapi.com/price',
+    params: {Indices: 'NIFTY 50'},
+    headers: {
+      "X-RapidAPI-Key": "ebc213ac00mshcdbcf4e4c60518bp195c0cjsn751c7380510c",
+      "X-RapidAPI-Host": "latest-stock-price.p.rapidapi.com",
+    },
+};
+
+export const next50Req = {
+    method: "GET",
+    url: 'https://latest-stock-price.p.rapidapi.com/price',
+    params: {Indices: 'NIFTY NEXT 50'},
+    headers: {
+      "X-RapidAPI-Key": "ebc213ac00mshcdbcf4e4c60518bp195c0cjsn751c7380510c",
+      "X-RapidAPI-Host": "latest-stock-price.p.rapidapi.com",
+    },
+};
+
 export class Stock {
     nifty50: string
     nifty50Up: boolean
@@ -36,6 +57,7 @@ export const IndexCard = (props: Props)  => {
         minHeight: 220,
         flexDirection: 'column',
         border: 2,
+        margin: 2,
     }
 
     const header_style = {
@@ -47,7 +69,7 @@ export const IndexCard = (props: Props)  => {
         <Card sx={card_style}>
             <CardContent>
                 <Typography display='flex' justifyContent='center' marginBottom={4}>
-                    INDEX
+                    STOCK-INDEX
                  </Typography>
                  <Typography display='flex' justifyContent='space-between' marginBottom={3}>
                     <Typography>NIFTY50</Typography>

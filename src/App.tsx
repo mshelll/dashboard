@@ -6,9 +6,11 @@ import Grid from '@mui/material/Grid';
 import axios from 'axios';
 
 import {ScoreCards, fetchScore, Game,} from './Score'
-import { IndexCard, Stock,  } from './Stock';
+import { nifty50Req, next50Req, IndexCard, Stock,  } from './Stock';
+import { covidRequest, CovidCard, Covid, fetchCovid } from './Covid';
+import { Typography } from '@mui/material';
 
-const useSemiPersistentState = (key: string, defaultValue: Stock) => {
+const useSemiPersistentState = (key: string, defaultValue: any) => {
 
   console.log(JSON.stringify(defaultValue))
 
@@ -29,10 +31,9 @@ function App() {
 
   const [games, setGames] = React.useState(new Array<Game>)
 
-  // const [nifty50, setNifty50] = React.useState("")
-  // const [next50, setNext50] = React.useState("")
-
   const [cur_stock, setStock] = useSemiPersistentState('stock', new Stock())
+
+  const [covid, setCovid] = useSemiPersistentState('covid', new Covid())
 
   const handleScore = () => {
 
@@ -43,20 +44,10 @@ function App() {
       setGames(cur_games)
     })
   }
-  
 
   const handleNifty50 = () => {
-    console.log("Inside handle NIFTy 50")
-    const options = {
-      method: "GET",
-      url: 'https://latest-stock-price.p.rapidapi.com/price',
-      params: {Indices: 'NIFTY 50'},
-      headers: {
-        "X-RapidAPI-Key": "ebc213ac00mshcdbcf4e4c60518bp195c0cjsn751c7380510c",
-        "X-RapidAPI-Host": "latest-stock-price.p.rapidapi.com",
-      },
-    };
-    axios.request(options).then(function (response) {
+
+    axios.request(nifty50Req).then(function (response) {
       console.log(response.data);
       for (var index in response.data) {
         let item = response.data[index];
@@ -68,7 +59,6 @@ function App() {
         }
       }
 
-      //console.log("NIFTY 50", cur_stock)
       setStock(cur_stock);
     }).catch(function (error) {
       console.error(error);
@@ -76,29 +66,29 @@ function App() {
   }
 
   const handleNiftyNext50 = () => {
-    
-    const options = {
-      method: "GET",
-      url: 'https://latest-stock-price.p.rapidapi.com/price',
-      params: {Indices: 'NIFTY NEXT 50'},
-      headers: {
-        "X-RapidAPI-Key": "ebc213ac00mshcdbcf4e4c60518bp195c0cjsn751c7380510c",
-        "X-RapidAPI-Host": "latest-stock-price.p.rapidapi.com",
-      },
-    };
-    axios.request(options).then(function (response) {
+
+    axios.request(next50Req).then(function (response) {
       console.log(response.data);
       for (var index in response.data) {
         let item = response.data[index];
         if(item.symbol == "NIFTY NEXT 50") {
-          //console.log("Found next 50")
           cur_stock.niftyNext50 = item.lastPrice;
           cur_stock.niftyNext50Up = +item.lastPrice > +item.Open;
           break;
         }
       }
-      //console.log("NEXT 50", cur_stock)
       setStock(cur_stock);
+    }).catch(function (error) {
+      console.error(error);
+    });
+  }
+
+  const handleCovid = () => {
+
+    axios.request(covidRequest).then(function (response) {
+      console.log(response.data);
+      const covid = fetchCovid(response)
+      setCovid(covid)
     }).catch(function (error) {
       console.error(error);
     });
@@ -108,20 +98,31 @@ function App() {
     handleScore()
     handleNifty50()
     handleNiftyNext50()
-    // handleSnP()
+    handleCovid()
   }, [])
 
+  const header_style = {
+    color: "blue",
+    fontSize: 50,
+    margin: 10,
+  }
 
   const grid_style = {
     direction: "row",
     justifyContent: "space-around",
-    alignItems: "space-around",
-    spacing: 2,
-    marginTop: 10,
+    alignItems: "center",
+    spacing: 30,
+    margin: 20,
+    marginLeft: 30,
+    maxWidth: "70%",
+    minHeight: "80%",
   }
 
   return (
     <div className="App">
+      <Typography sx={header_style}>
+        INDIA-DASHBOARD
+      </Typography>
       <Grid
        container
        sx={grid_style}
@@ -132,6 +133,9 @@ function App() {
       />
       <IndexCard
         stock={cur_stock}
+      />
+      <CovidCard
+        covid={covid}
       />
       </Grid>
     </div>

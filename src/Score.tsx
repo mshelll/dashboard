@@ -118,6 +118,7 @@ export const ScoreCard = (props: Props1) => {
       minHeight: 200,
       flexDirection: 'column',
       border: 2,
+      margin: 2,
     }
     
     const header_style = {
