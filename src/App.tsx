@@ -8,11 +8,10 @@ import axios from 'axios';
 import {ScoreCards, fetchScore, Game,} from './Score'
 import { nifty50Req, next50Req, IndexCard, Stock,  } from './Stock';
 import { covidRequest, CovidCard, Covid, fetchCovid } from './Covid';
+import { cryptoRequest, CryptoCard, Crypto, fetchCrypto } from './Crypto';
 import { Typography } from '@mui/material';
 
 const useSemiPersistentState = (key: string, defaultValue: any) => {
-
-  console.log(JSON.stringify(defaultValue))
 
 
   const [value, setValue] = React.useState(
@@ -35,11 +34,13 @@ function App() {
 
   const [covid, setCovid] = useSemiPersistentState('covid', new Covid())
 
+  const [crypto, setCrypto] =  useSemiPersistentState('crypto', new Crypto())
+
   const handleScore = () => {
 
     const API_ENDPT = 'https://api.cricapi.com/v1/currentMatches?apikey=27bc8116-3ed7-4902-82d4-29ada2df17c1'
     axios.get(API_ENDPT).then((response) => {
-      console.log(response)
+      //console.log(response)
       const cur_games = fetchScore(response)
       setGames(cur_games)
     })
@@ -48,11 +49,10 @@ function App() {
   const handleNifty50 = () => {
 
     axios.request(nifty50Req).then(function (response) {
-      console.log(response.data);
+      //console.log(response.data);
       for (var index in response.data) {
         let item = response.data[index];
         if(item.symbol == "NIFTY 50") {
-          //console.log("Found nifty 50")
           cur_stock.nifty50 = item.lastPrice;
           cur_stock.nifty50Up = +item.lastPrice > +item.Open;
           break;
@@ -68,7 +68,7 @@ function App() {
   const handleNiftyNext50 = () => {
 
     axios.request(next50Req).then(function (response) {
-      console.log(response.data);
+      //console.log(response.data);
       for (var index in response.data) {
         let item = response.data[index];
         if(item.symbol == "NIFTY NEXT 50") {
@@ -86,9 +86,22 @@ function App() {
   const handleCovid = () => {
 
     axios.request(covidRequest).then(function (response) {
-      console.log(response.data);
+      // console.log("Inside covid response")
+      // console.log(response.data);
       const covid = fetchCovid(response)
       setCovid(covid)
+    }).catch(function (error) {
+      console.error(error);
+    });
+  }
+  
+  const handleCrypto = () => {
+
+    axios.request(cryptoRequest).then(function (response) {
+      console.log("Inside crypto")
+      console.log(response.data);
+      const crypto = fetchCrypto(response)
+      setCrypto(crypto)
     }).catch(function (error) {
       console.error(error);
     });
@@ -98,6 +111,7 @@ function App() {
     handleScore()
     handleNifty50()
     handleNiftyNext50()
+    handleCrypto()
     handleCovid()
   }, [])
 
@@ -136,6 +150,9 @@ function App() {
       />
       <CovidCard
         covid={covid}
+      />
+      <CryptoCard
+        crypto={crypto}
       />
       </Grid>
     </div>

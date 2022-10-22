@@ -30,8 +30,8 @@ export const fetchCovid = (response: any): Covid => {
 
     const data = new Covid();
 
-    console.log("Inside fetchData")
-    console.log(response.data.stats);
+    // console.log("Inside fetchCovid")
+    // console.log(response.data.stats);
     data.totalConfirmed = response.data.stats.totalConfirmedCases;
     data.totalDeaths = response.data.stats.totalDeaths;
     data.totalRecovered = response.data.stats.totalRecoveredCases;
