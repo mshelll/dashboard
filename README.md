@@ -52,6 +52,10 @@ Team Flag
 Styling and Position the Card
 
 
+<img width="1132" alt="image" src="https://user-images.githubusercontent.com/3204739/197444075-f7dd3529-ac34-4b7c-822f-859ac0ae624a.png">
+
+
+
 # Dashboard
 https://dashboard-2ac58.web.app/
 
