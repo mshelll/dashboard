@@ -126,10 +126,11 @@ function App() {
     justifyContent: "space-around",
     alignItems: "center",
     spacing: 30,
-    margin: 20,
-    marginLeft: 30,
+    marginLeft: "10rem",
     maxWidth: "70%",
     minHeight: "80%",
+    boxSizing: "border-box",
+    color: "blue",
   }
 
   return (
